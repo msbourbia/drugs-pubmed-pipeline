@@ -40,19 +40,20 @@ class FoundBiggestJournal(beam.PTransform):
 
     @staticmethod
     def droug_list_size(row):
-        "count the number of drugs mentioned by jouranl"
+        """count the number of drugs mentioned by journal
+        """
         return row[0], len(row[1])
 
     def expand(self, pcoll):
         return (pcoll
-                       | 'Format entry to get list of (journal, drug)' >> beam.ParDo(JouranalListFn()) \
-                       | 'Flat lists to pcoll of tuple (journal, drug)' >> beam.FlatMap(self.generate_elements)) \
-                       | 'Deduplicate elements' >> beam.Distinct() \
-                       | 'Group by journal' >> beam.GroupByKey() \
-                       | 'Count drugs list size by journal' >> beam.Map(self.droug_list_size) \
-                       | 'Add key' >> beam.Map(self.add_key) \
-                       | 'Group by key' >> beam.GroupByKey() \
-                       | 'Sort grouped data and return top' >> beam.Map(self.sort_grouped_data)
+                | 'Format entry to get list of (journal, drug)' >> beam.ParDo(JouranalListFn())
+                | 'Flat lists to pcoll of tuple (journal, drug)' >> beam.FlatMap(self.generate_elements)) \
+               | 'Deduplicate elements' >> beam.Distinct() \
+               | 'Group by journal' >> beam.GroupByKey() \
+               | 'Count drugs list size by journal' >> beam.Map(self.droug_list_size) \
+               | 'Add key' >> beam.Map(self.add_key) \
+               | 'Group by key' >> beam.GroupByKey() \
+               | 'Sort grouped data and return top' >> beam.Map(self.sort_grouped_data)
 
 
 class SetEncoder(json.JSONEncoder):

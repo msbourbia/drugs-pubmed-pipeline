@@ -1,5 +1,9 @@
-from src.jobs.pipeline_biggest_journal import PipelineJob
 import unittest
+
+
+
+from src.jobs.pipeline_biggest_journal import PipelineJob
+
 
 
 class DataPreparationTestCase(unittest.TestCase):
@@ -38,6 +42,9 @@ class DataPreparationTestCase(unittest.TestCase):
         with open('test/resources/result_biggest_journal.txt') as f:
             result = f.readlines()
             self.assertEqual(result, ['Psychopharmacology\n'])
+
+
+
 
 
 if __name__ == "__main__":
